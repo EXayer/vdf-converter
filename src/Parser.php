@@ -2,9 +2,10 @@
 
 namespace EXayer\VdfConverter;
 
+use EXayer\VdfConverter\Exception\CouldNotParseException;
 use Traversable;
 
-class Parser implements \IteratorAggregate, PositionAwareInterface
+class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAwareInterface
 {
     /**
      * @var Traversable
@@ -21,6 +22,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface
 
     /**
      * @return \Generator
+     * @throws CouldNotParseException
      */
     public function getIterator()
     {
@@ -85,7 +87,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface
                     break;
 
                 default:
-
+                    throw CouldNotParseException::unknownToken($this->getLine(), $this->getColumn());
             }
 
             if (!$isYieldAllowed) {
@@ -120,7 +122,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getPosition(): int
     {
@@ -129,6 +131,30 @@ class Parser implements \IteratorAggregate, PositionAwareInterface
         }
 
         return $this->lexer->getPosition();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLine(): int
+    {
+        if (!$this->lexer instanceof LineColumnAwareInterface) {
+            return 0;
+        }
+
+        return $this->lexer->getLine();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getColumn(): int
+    {
+        if (!$this->lexer instanceof LineColumnAwareInterface) {
+            return -1;
+        }
+
+        return $this->lexer->getColumn();
     }
 
     /**

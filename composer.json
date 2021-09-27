@@ -30,7 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "VdfConverter\\Tests\\": "tests"
+            "EXayer\\VdfConverter\\Tests\\": "tests"
         }
     },
     "scripts": {
