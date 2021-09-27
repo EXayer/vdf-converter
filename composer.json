@@ -1,0 +1,39 @@
+{
+    "name": "exayer/vdf-converter",
+    "description": "Efficient, fast Valve Data Format (*.vdf) parser",
+    "keywords": [
+        "KeyValues",
+        "parser",
+        "valve",
+        "vdf"
+    ],
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "9.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vitalii Honcharuk",
+            "email": "itwasntluck@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "EXayer\\VdfConverter\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "VdfConverter\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    }
+}
