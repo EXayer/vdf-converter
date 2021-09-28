@@ -2,6 +2,7 @@
     "name": "exayer/vdf-converter",
     "description": "Efficient, fast Valve Data Format (*.vdf) parser",
     "keywords": [
+        "format",
         "KeyValues",
         "parser",
         "valve",

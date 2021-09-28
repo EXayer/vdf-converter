@@ -32,6 +32,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
         $isKeyExpecting = true;
         $isLevelKeyExists = false;
         $level = -1;
+        $levelYield = -2;               // either 0 (vdf starts from key) or -1 (vdf starts from "{")
 
         $buffer = [];
         $bufferLevel = 0;
@@ -42,10 +43,18 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
 
             switch ($token[0]) {
                 case '"':
+                    if (substr($token, -1) !== '"' || strlen($token) === 1) {
+                        throw CouldNotParseException::wrongQuotedToken($this->getLine(), $this->getColumn());
+                    }
+
                     if ($isKeyExpecting) {
                         $key = $this->unquote($token);
                         $isKeyExpecting = false;
                         $isYieldAllowed = false;
+
+                        if ($levelYield === -2) {
+                            $levelYield = -1;
+                        }
                     } else {
                         $value = $this->unquote($token);
                         $isKeyExpecting = true;
@@ -55,6 +64,10 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
 
                 case '{':
                     ++$level;
+
+                    if ($levelYield === -2) {
+                        $levelYield = 0;
+                    }
 
                     if ($key !== null) {
                         if ($isLevelKeyExists) {
@@ -101,7 +114,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
                 $value = null;
             }
 
-            if ($level === 0) {
+            if ($level === $levelYield) {
                 if ($value !== null) {
                     yield $key => $value;
 

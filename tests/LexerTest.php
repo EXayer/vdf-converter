@@ -10,8 +10,8 @@ class LexerTest extends TestCase
 {
     public function testYieldsTokens()
     {
-        $data = ['{}  " ab c " "0" "#item"' . "\n\r" . '"qwerty"   "-1" ""'];
-        $expected = ['{', '}', '" ab c "', '"0"', '"#item"', '"qwerty"', '"-1"', '""'];
+        $data = ['{}  " ab c " "0" "#item"' . "\n\r\t\t" . '"qwerty"   "-1" "" "\"three\""'];
+        $expected = ['{', '}', '" ab c "', '"0"', '"#item"', '"qwerty"', '"-1"', '""', '"\"three\""'];
 
         $this->assertEquals($expected, iterator_to_array(new Lexer(new \ArrayIterator($data))));
     }
@@ -74,7 +74,7 @@ VDF;
 
     private function lineColumnAwareProvider()
     {
-        // token, line, column, position
+        // token, line, column
         return [
             ['"treasure_chest"', 1, 1],
             ['{', 2, 1],
