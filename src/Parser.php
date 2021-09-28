@@ -27,6 +27,8 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
     public function getIterator()
     {
         $lexer = $this->lexer;
+        $token = null;
+
         $key = null;
         $value = null;
         $isKeyExpecting = true;
@@ -115,22 +117,30 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
             }
 
             if ($level === $levelYield) {
-                if ($value !== null) {
-                    yield $key => $value;
+                $bufferCount = count($buffer);
 
-                    $key = null;
-                    $value = null;
-                    $isKeyExpecting = true;
-                } else if (!empty($buffer)) {
-                    reset($buffer);
-                    $bufferKey = key($buffer);
-                    yield $bufferKey => $buffer[$bufferKey];
+                if ($bufferCount > 0) {
+                    if ($bufferCount == 1) {
+                        reset($buffer);
+                        $bufferKey = key($buffer);
+                        yield $bufferKey => $buffer[$bufferKey];
+                    } else {
+                        yield from new \ArrayIterator($buffer);
+                    }
 
                     $buffer = [];
                     $refs = [&$buffer];
                     $bufferLevel = 0;
                 }
             }
+        }
+
+        if ($token === null) {
+            throw CouldNotParseException::emptyVdf();
+        }
+
+        if ($level != -1 || !empty($buffer) || $key !== null || $value !== null) {
+            throw CouldNotParseException::unexpectedEnding();
         }
     }
 

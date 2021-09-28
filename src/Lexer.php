@@ -146,7 +146,7 @@ class Lexer implements IteratorAggregate, PositionAwareInterface, LineColumnAwar
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getPosition(): int
     {
@@ -154,7 +154,7 @@ class Lexer implements IteratorAggregate, PositionAwareInterface, LineColumnAwar
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getLine(): int
     {
@@ -162,7 +162,7 @@ class Lexer implements IteratorAggregate, PositionAwareInterface, LineColumnAwar
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getColumn(): int
     {

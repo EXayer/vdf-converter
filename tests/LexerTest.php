@@ -44,13 +44,13 @@ VDF;
 
     /**
      * @param string $vdfFilePath
-     * @dataProvider newLinesFilePathProvider
+     * @dataProvider newLinesFilePathDataProvider
      */
     public function testProvidesLocationalData(string $vdfFilePath)
     {
         $vdfStr = file_get_contents($vdfFilePath);
         $lexer = new Lexer(new StringChunks($vdfStr));
-        $positions = $this->lineColumnAwareProvider();
+        $positions = $this->lineColumnAwareDataProvider();
 
         $i = 0;
         foreach ($lexer as $token) {
@@ -63,7 +63,7 @@ VDF;
         }
     }
 
-    public function newLinesFilePathProvider()
+    public function newLinesFilePathDataProvider()
     {
         return [
             'CR newlines' => [__DIR__ . '/samples/CR-newlines.txt'],
@@ -72,7 +72,7 @@ VDF;
         ];
     }
 
-    private function lineColumnAwareProvider()
+    private function lineColumnAwareDataProvider()
     {
         // token, line, column
         return [

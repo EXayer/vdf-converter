@@ -13,4 +13,14 @@ class CouldNotParseException extends \Exception
     {
         return new static("Found a wrong quoted token at {$line}:{$column}");
     }
+
+    public static function emptyVdf(): self
+    {
+        return new static("VDF string is empty");
+    }
+
+    public static function unexpectedEnding(): self
+    {
+        return new static("VDF string ended unexpectedly");
+    }
 }
