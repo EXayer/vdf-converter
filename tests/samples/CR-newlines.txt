@@ -1,0 +1,1 @@
+"treasure_chest"{    "Blades"		"1"    "Aeons"		"1"    "Resistive"		"1"    "Signet"		"1"    "Staff"		"1"    "additional_drop"    {        "chance"		"1"        "item"		"Desolation"    }    "additional_drop"    {        "chance"		"1"        "item"		"Golden Blades"    }}

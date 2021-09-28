@@ -37,6 +37,7 @@ class VdfConverter implements \IteratorAggregate
 
     /**
      * @return \Generator
+     * @throws Exception\CouldNotParseException
      */
     public function getIterator()
     {
