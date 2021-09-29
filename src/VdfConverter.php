@@ -3,6 +3,8 @@
 namespace EXayer\VdfConverter;
 
 use EXayer\VdfConverter\Input\FileChunks;
+use EXayer\VdfConverter\Input\StreamChunks;
+use EXayer\VdfConverter\Input\StringChunks;
 
 class VdfConverter implements \IteratorAggregate
 {
@@ -26,6 +28,16 @@ class VdfConverter implements \IteratorAggregate
     }
 
     /**
+     * @param string $string
+     *
+     * @return self
+     */
+    public static function fromString(string $string): self
+    {
+        return new static(new StringChunks($string));
+    }
+
+    /**
      * @param string $file
      *
      * @return self
@@ -33,6 +45,16 @@ class VdfConverter implements \IteratorAggregate
     public static function fromFile(string $file): self
     {
         return new static(new FileChunks($file));
+    }
+
+    /**
+     * @param resource $stream
+     *
+     * @return self
+     */
+    public static function fromStream($stream): self
+    {
+        return new static(new StreamChunks($stream));
     }
 
     /**
