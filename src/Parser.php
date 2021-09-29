@@ -114,6 +114,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
 
                 $key = null;
                 $value = null;
+                $isLevelKeyExists = true;
             }
 
             if ($level === $levelYield) {
