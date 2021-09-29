@@ -6,7 +6,7 @@ use EXayer\VdfConverter\Input\FileChunks;
 use EXayer\VdfConverter\Input\StreamChunks;
 use EXayer\VdfConverter\Input\StringChunks;
 
-class VdfConverter implements \IteratorAggregate
+class VdfConverter implements \IteratorAggregate, PositionAwareInterface
 {
     /**
      * @var iterable
@@ -58,11 +58,29 @@ class VdfConverter implements \IteratorAggregate
     }
 
     /**
+     * @param \Traversable|array $iterable
+     *
+     * @return self
+     */
+    public static function fromIterable($iterable): self
+    {
+        return new static($iterable);
+    }
+
+    /**
      * @return \Generator
      * @throws Exception\CouldNotParseException
      */
     public function getIterator()
     {
         return $this->parser->getIterator();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPosition(): int
+    {
+        return $this->parser->getPosition();
     }
 }
