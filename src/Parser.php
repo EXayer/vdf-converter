@@ -124,6 +124,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
                     if ($bufferCount == 1) {
                         reset($buffer);
                         $bufferKey = key($buffer);
+
                         yield $bufferKey => $buffer[$bufferKey];
                     } else {
                         yield from new \ArrayIterator($buffer);

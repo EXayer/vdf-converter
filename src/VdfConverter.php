@@ -38,13 +38,13 @@ class VdfConverter implements \IteratorAggregate, PositionAwareInterface
     }
 
     /**
-     * @param string $file
+     * @param string $fileName
      *
      * @return self
      */
-    public static function fromFile(string $file): self
+    public static function fromFile(string $fileName): self
     {
-        return new static(new FileChunks($file));
+        return new static(new FileChunks($fileName));
     }
 
     /**
