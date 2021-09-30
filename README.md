@@ -4,8 +4,12 @@
 
 [![Total Downloads](https://img.shields.io/packagist/dt/EXayer/vdf-converter)](https://packagist.org/packages/exayer/vdf-converter)
 
-An efficient, fast Parser, for Valve Data Format (*.vdf) written in PHP.
-Fully supports [VDF specification](https://developer.valvesoftware.com/wiki/KeyValues), except for the `#include` macro.
+Memory efficient parser for Valve Data Format (*.vdf) written in PHP.
+Fully supports [VDF specification](https://developer.valvesoftware.com/wiki/KeyValues), except `#include` macro.
+
+## Requirements
+
+PHP 7 or later. No production dependencies.
 
 ## Install
 
@@ -16,6 +20,8 @@ composer require exayer/vdf-converter
 ```
 
 ## Usage
+
+### Convert VDF to generator/array
 
 Let's say we parsing the following VDF:
 ```php
@@ -53,26 +59,26 @@ $planets = VdfConverter::fromIterable([substr($vdf, 0, -60), substr($vdf, -60)])
 To get data we need to iterate over generator using foreach
 ```php
 foreach ($planets as $name => $data) {
-    // #1 iteration: $name === "mercury" and $data === ["distance" => "58"]
-    // #2 iteration: $name === "venus" and $data === ["distance" => "108"]
-    // #3 iteration: $name === "earth" and $data === ["distance" => "149"]
+    // #1 iteration: $name === "mercury" $data === ["distance" => "58"]
+    // #2 iteration: $name === "venus"   $data === ["distance" => "108"]
+    // #3 iteration: $name === "earth"   $data === ["distance" => "149"]
 }
 ```
-Or simply convert to array
+Or simply convert it to array
 
 ```php
 $result = iterator_to_array($planets);
 
 //
 //  $result = [
-//    'mercury' => [
-//      'distance' => '58'
+//    "mercury" => [
+//      "distance" => "58"
 //    ]
-//    'venus' => [
-//      "distance' => '108'
+//    "venus" => [
+//      "distance" => "108"
 //    ]
-//    'earth' => [
-//      'distance' => "149"
+//    "earth" => [
+//      "distance" => "149"
 //    ]
 // ]
 ```
