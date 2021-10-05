@@ -13,11 +13,17 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
     private $lexer;
 
     /**
+     * @var UniqueKey
+     */
+    private $uniqueKey;
+
+    /**
      * @param Traversable $lexer
      */
     public function __construct(Traversable $lexer)
     {
         $this->lexer = $lexer;
+        $this->uniqueKey = new UniqueKey();
     }
 
     /**
@@ -50,7 +56,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
                     }
 
                     if ($isKeyExpecting) {
-                        $key = $this->unquote($token);
+                        $key = $this->uniqueKey->get($bufferLevel, $this->unquote($token));
                         $isKeyExpecting = false;
                         $isYieldAllowed = false;
 
@@ -74,6 +80,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
                     if ($key !== null) {
                         if ($isLevelKeyExists) {
                             $refs[$bufferLevel][$key] = [];
+
                             $isLevelKeyExists = false;
                         } else {
                             $refs[$bufferLevel] = [$key => []];
@@ -94,6 +101,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
 
                     if (!empty($buffer)) {
                         array_pop($refs);
+                        $this->uniqueKey->clear($bufferLevel);
                         --$bufferLevel;
 
                         $isLevelKeyExists = true;
@@ -117,23 +125,12 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
                 $isLevelKeyExists = true;
             }
 
-            if ($level === $levelYield) {
-                $bufferCount = count($buffer);
+            if ($level === $levelYield && !empty($buffer)) {
+                yield from new \ArrayIterator($buffer);
 
-                if ($bufferCount > 0) {
-                    if ($bufferCount == 1) {
-                        reset($buffer);
-                        $bufferKey = key($buffer);
-
-                        yield $bufferKey => $buffer[$bufferKey];
-                    } else {
-                        yield from new \ArrayIterator($buffer);
-                    }
-
-                    $buffer = [];
-                    $refs = [&$buffer];
-                    $bufferLevel = 0;
-                }
+                $buffer = [];
+                $refs = [&$buffer];
+                $bufferLevel = 0;
             }
         }
 
@@ -141,7 +138,7 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
             throw CouldNotParseException::emptyVdf();
         }
 
-        if ($level != -1 || !empty($buffer) || $key !== null || $value !== null) {
+        if ($level !== -1 || !empty($buffer) || $key !== null || $value !== null) {
             throw CouldNotParseException::unexpectedEnding();
         }
     }
