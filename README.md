@@ -2,7 +2,9 @@
 
 # VDF Converter
 
+![Tests](https://github.com/exayer/vdf-converter/workflows/Tests/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/EXayer/vdf-converter)](https://packagist.org/packages/exayer/vdf-converter)
+![Latest Stable Version](https://img.shields.io/packagist/v/exayer/vdf-converter)
 
 Memory efficient parser for Valve Data Format (*.vdf) written in PHP.
 Fully supports [VDF specification](https://developer.valvesoftware.com/wiki/KeyValues), except `#include` macro.
@@ -83,6 +85,45 @@ $result = iterator_to_array($planets);
 // ]
 ```
 
+### Duplicate key handling
+
+Some VDFs are known to contain duplicate keys. 
+To keep the result structure the same as the VDF and since the parser is generator based (not keeping in memory pairs) 
+the duplicated key will be modified - the counter will be concatenated to the end (e.g. 'key__2').
+
+
+```php
+$vdf = '{
+    "mercury" {
+        "distance" "58"
+        "velocity" "35"
+        "distance" "92"
+    }
+    "mercury" {
+        "distance" "108"
+    }
+    "earth" {
+        "distance" "149"
+    }
+}';
+
+$result = iterator_to_array(VdfConverter::fromString($vdf));
+
+//
+//  $result = [
+//    "mercury" => [
+//      "distance" => "58"
+//      "velocity" => "35"
+//      "distance__2" => "92"
+//    ]
+//    "mercury__2" => [
+//      "distance" => "108"
+//    ]
+//    "earth" => [
+//      "distance" => "149"
+//    ]
+// ]
+```
 ## Testing
 
 ```bash
@@ -91,7 +132,6 @@ composer test
 
 ## Features to implement
 
-* Duplicate key support - Some VDFs are known to contain duplicate keys. In such case, the key data will be overwritten. 
 * Key Pointer - Parse only the specific part of VDF based on a path build from keys (e.g. 'key1.key2.key3').
 
 ## Inspiration
