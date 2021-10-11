@@ -128,6 +128,17 @@ class Lexer implements IteratorAggregate, PositionAwareInterface, LineColumnAwar
                     }
                 } else {
                     if ($byte === '"') {
+                        if ($buffer !== '') {
+                            $this->position = $position;
+                            $this->column = $column;
+
+                            yield $buffer;
+
+                            $column += $bufferLength;
+                            $buffer = '';
+                            $bufferLength = 0;
+                        }
+
                         $inString = true;
                     }
 

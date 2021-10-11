@@ -6,8 +6,8 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/EXayer/vdf-converter)](https://packagist.org/packages/exayer/vdf-converter)
 ![Latest Stable Version](https://img.shields.io/packagist/v/exayer/vdf-converter)
 
-Memory efficient parser for Valve Data Format (*.vdf) written in PHP.
-Fully supports [VDF specification](https://developer.valvesoftware.com/wiki/KeyValues), except `#include` macro.
+A memory efficient parser for the Valve Data Format (*.vdf) written in PHP.
+Fully supports the [VDF specification](https://developer.valvesoftware.com/wiki/KeyValues), except for the `#include` macro.
 
 ## Requirements
 
@@ -25,7 +25,7 @@ composer require exayer/vdf-converter
 
 ### Convert VDF to generator/array
 
-Let's say we parsing the following VDF:
+Let's say we are parsing the following VDF:
 ```php
 $vdf = '{
     "mercury" {
@@ -58,7 +58,7 @@ $planets = VdfConverter::fromStream($tempFile);
 
 $planets = VdfConverter::fromIterable([substr($vdf, 0, -60), substr($vdf, -60)]);
 ```
-To get data we need to iterate over generator using foreach
+To get the data you need to iterate over generator using foreach
 ```php
 foreach ($planets as $name => $data) {
     // #1 iteration: $name === "mercury" $data === ["distance" => "58"]
@@ -132,11 +132,11 @@ composer test
 
 ## Features to implement
 
-* Key Pointer - Parse only the specific part of VDF based on a path build from keys (e.g. 'key1.key2.key3').
+* Key Pointer - Parse only the specific part of the VDF based on the path built from the keys (e.g. 'key1.key2.key3').
 
 ## Inspiration
 
-The code is driven by [@halaxa](https://github.com/halaxa) package [json-machine](https://github.com/halaxa/json-machine). Thank you!
+The code is inspired by [@halaxa](https://github.com/halaxa) package [json-machine](https://github.com/halaxa/json-machine). Thank you!
 		
 ## License
 
