@@ -10,8 +10,8 @@ class LexerTest extends TestCase
 {
     public function testYieldsTokens()
     {
-        $data = ['{}  " ab c " "0" "#item"' . "\n\r\t\t" . '"qwerty"   "-1" "" "\"three\""'];
-        $expected = ['{', '}', '" ab c "', '"0"', '"#item"', '"qwerty"', '"-1"', '""', '"\"three\""'];
+        $data = ['{}  " ab c " "0" "#item"' . "\n\r\t\t" . '"qwerty"   "-1" "" "\"three\"" "a""b"'];
+        $expected = ['{', '}', '" ab c "', '"0"', '"#item"', '"qwerty"', '"-1"', '""', '"\"three\""', '"a"', '"b"'];
 
         $this->assertEquals($expected, iterator_to_array(new Lexer(new \ArrayIterator($data))));
     }
