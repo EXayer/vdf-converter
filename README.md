@@ -89,8 +89,7 @@ $result = iterator_to_array($planets);
 
 Some VDFs are known to contain duplicate keys. 
 To keep the result structure the same as the VDF and since the parser is generator based (not keeping in memory pairs) 
-the duplicated key will be modified - the counter will be concatenated to the end (e.g. 'key__2').
-
+the duplicated key will be modified - the counter will be concatenated to the end (e.g. `key__[2]`).
 
 ```php
 $vdf = '{
@@ -114,9 +113,9 @@ $result = iterator_to_array(VdfConverter::fromString($vdf));
 //    "mercury" => [
 //      "distance" => "58"
 //      "velocity" => "35"
-//      "distance__2" => "92"
+//      "distance__[2]" => "92"
 //    ]
-//    "mercury__2" => [
+//    "mercury__[2]" => [
 //      "distance" => "108"
 //    ]
 //    "earth" => [
@@ -124,6 +123,35 @@ $result = iterator_to_array(VdfConverter::fromString($vdf));
 //    ]
 // ]
 ```
+
+#### Customizing key format
+
+If you want to customize the formatting key process, you can create your own custom formatter. A formatter is any class that implements `EXayer\VdfConverter\UniqueKey\Formatter`.
+
+This is what that interface looks like.
+
+```php
+namespace EXayer\VdfConverter\UniqueKey;
+
+interface Formatter
+{
+    public function buildKeyName(string $key, int $index): string;
+}
+```
+
+After creating your formatter, you can specify its class name in the `uniqueKeyFormatter` method of the `EXayer\VdfConverter\VdfConverterConfig` object. The config can be passed as second argument to any `from` builder method. Your formatter will then be used by default for all duplicate key handling calls.
+
+You can also specify a signer for a specific webhook call:
+
+```php
+$config = (new VdfConverterConfig())
+    ->uniqueKeyFormatter(YourCustomFormatter::class);
+
+$iterator = VdfConverter::fromString($vdf, $config);
+```
+
+**Warning**: Do not create formatters that create a key like `__2`, as some VDFs may have keys in this format.
+
 ## Testing
 
 ```bash
