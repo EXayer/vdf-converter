@@ -3,7 +3,6 @@
 # VDF Converter
 
 ![Tests](https://github.com/exayer/vdf-converter/workflows/Tests/badge.svg)
-[![Total Downloads](https://img.shields.io/packagist/dt/EXayer/vdf-converter)](https://packagist.org/packages/exayer/vdf-converter)
 ![Latest Stable Version](https://img.shields.io/packagist/v/exayer/vdf-converter)
 
 A memory efficient parser for the Valve Data Format (*.vdf) written in PHP.
@@ -144,7 +143,7 @@ After creating your formatter, you can specify its class name in the `uniqueKeyF
 You can also specify a signer for a specific webhook call:
 
 ```php
-$config = (new VdfConverterConfig())
+$config = VdfConverterConfig::create()
     ->uniqueKeyFormatter(YourCustomFormatter::class);
 
 $iterator = VdfConverter::fromString($vdf, $config);

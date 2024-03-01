@@ -5,6 +5,7 @@ namespace EXayer\VdfConverter\Tests;
 use EXayer\VdfConverter\Exception\CouldNotParseException;
 use EXayer\VdfConverter\Lexer;
 use EXayer\VdfConverter\Parser;
+use EXayer\VdfConverter\VdfConverterConfig;
 use PHPUnit\Framework\TestCase;
 
 class ParserTest extends TestCase
@@ -16,7 +17,7 @@ class ParserTest extends TestCase
      */
     public function testSyntax($vdf, $expectedResult)
     {
-        $parser = new Parser(new Lexer(new \ArrayIterator([$vdf])));
+        $parser = new Parser(new Lexer(new \ArrayIterator([$vdf])), new VdfConverterConfig());
         $result = iterator_to_array($parser);
 
         $this->assertEquals($expectedResult, $result);
@@ -87,13 +88,13 @@ class ParserTest extends TestCase
                 [
                     'a' => [
                         'b' => 1,
-                        'x' => ['x' => 1, 'x__2' => 2],
+                        'x' => ['x' => 1, 'x__[2]' => 2],
                         'e' => [
-                            'f' => ['x' => 1, '' => 1, '__2' => 2, 'x__2' => 2],
-                            'f__2' => [],
+                            'f' => ['x' => 1, '' => 1, '__[2]' => 2, 'x__[2]' => 2],
+                            'f__[2]' => [],
                         ],
-                        'x__2' => [],
-                        'e__2' => [],
+                        'x__[2]' => [],
+                        'e__[2]' => [],
                     ],
                 ],
             ],
@@ -103,14 +104,14 @@ class ParserTest extends TestCase
 
                 [
                     'a' => 1,
-                    'b' => ['c' => 1, 'c__2' => 2],
-                    'a__2' => [
-                        'b' => ['c' => 1, 'c__2' => 2],
-                        'b__2' => [],
+                    'b' => ['c' => 1, 'c__[2]' => 2],
+                    'a__[2]' => [
+                        'b' => ['c' => 1, 'c__[2]' => 2],
+                        'b__[2]' => [],
                     ],
-                    'a__3' => [],
+                    'a__[3]' => [],
                     'c' => [],
-                    'c__2' => [],
+                    'c__[2]' => [],
                 ],
             ],
             // all duplicates
@@ -118,13 +119,13 @@ class ParserTest extends TestCase
                 '{"x" "1" "x" {"x" "1" "x" "2"} "x" {"x" {"x" "1" "x" "2"} "x" {}} "x" {} "x" {}}',
                 [
                     'x' => 1,
-                    'x__2' => ['x' => 1, 'x__2' => 2],
-                    'x__3' => [
-                        'x' => ['x' => 1, 'x__2' => 2],
-                        'x__2' => [],
+                    'x__[2]' => ['x' => 1, 'x__[2]' => 2],
+                    'x__[3]' => [
+                        'x' => ['x' => 1, 'x__[2]' => 2],
+                        'x__[2]' => [],
                     ],
-                    'x__4' => [],
-                    'x__5' => [],
+                    'x__[4]' => [],
+                    'x__[5]' => [],
                 ],
             ],
         ];
@@ -138,7 +139,7 @@ class ParserTest extends TestCase
     {
         $this->expectException(CouldNotParseException::class);
 
-        iterator_to_array(new Parser(new Lexer(new \ArrayIterator([$brokenVdf]))));
+        iterator_to_array(new Parser(new Lexer(new \ArrayIterator([$brokenVdf])), new VdfConverterConfig()));
     }
 
     public function syntaxErrorDataProvider()
@@ -162,7 +163,7 @@ class ParserTest extends TestCase
     {
         $this->expectExceptionMessage(CouldNotParseException::unexpectedEnding()->getMessage());
 
-        iterator_to_array(new Parser(new Lexer(new \ArrayIterator([$vdf]))));
+        iterator_to_array(new Parser(new Lexer(new \ArrayIterator([$vdf])), new VdfConverterConfig()));
     }
 
     public function unexpectedEndExceptionDataProvider()
