@@ -1,13 +1,13 @@
 <?php
 
-namespace EXayer\VdfConverter;
+namespace EXayer\VdfConverter\UniqueKey;
 
-class UniqueKey
+class UniqueKeyHandler
 {
     /**
-     * @const
+     * @var Formatter
      */
-    const DELIMITER = '__';
+    private $formatter;
 
     /**
      * Holds duplicate key counts for each level of nesting.
@@ -16,6 +16,14 @@ class UniqueKey
      * @var array
      */
     private $storage = [];
+
+    /**
+     * @param Formatter $formatter
+     */
+    public function __construct(Formatter $formatter)
+    {
+        $this->formatter = $formatter;
+    }
 
     /**
      * @param int $level Buffer nesting level.
@@ -30,7 +38,7 @@ class UniqueKey
             return $key;
         }
 
-        return $this->buildName($key, ++$this->storage[$level][$key]);
+        return $this->formatter->buildKeyName($key, ++$this->storage[$level][$key]);
     }
 
     /**
@@ -41,15 +49,5 @@ class UniqueKey
         if (isset($this->storage[$level])) {
             $this->storage[$level] = [];
         }
-    }
-
-    /**
-     * @param string $key
-     * @param int $index
-     * @return string
-     */
-    private function buildName(string $key, int $index): string
-    {
-        return $key . self::DELIMITER . $index;
     }
 }

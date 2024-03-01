@@ -3,6 +3,7 @@
 namespace EXayer\VdfConverter;
 
 use EXayer\VdfConverter\Exception\CouldNotParseException;
+use EXayer\VdfConverter\UniqueKey\UniqueKeyHandler;
 use Traversable;
 
 class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAwareInterface
@@ -13,17 +14,18 @@ class Parser implements \IteratorAggregate, PositionAwareInterface, LineColumnAw
     private $lexer;
 
     /**
-     * @var UniqueKey
+     * @var UniqueKeyHandler
      */
     private $uniqueKey;
 
     /**
-     * @param Traversable $lexer
+     * @param Traversable        $lexer
+     * @param VdfConverterConfig $config
      */
-    public function __construct(Traversable $lexer)
+    public function __construct(Traversable $lexer, VdfConverterConfig $config)
     {
         $this->lexer = $lexer;
-        $this->uniqueKey = new UniqueKey();
+        $this->uniqueKey = new UniqueKeyHandler($config->getUniqueKeyFormatter());
     }
 
     /**

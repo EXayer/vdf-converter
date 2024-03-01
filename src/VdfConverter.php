@@ -19,52 +19,59 @@ class VdfConverter implements \IteratorAggregate, PositionAwareInterface
     private $parser;
 
     /**
-     * @param iterable $bytesIterator
+     * @param iterable                $bytesIterator
+     * @param VdfConverterConfig|null $config
      */
-    public function __construct($bytesIterator)
+    public function __construct($bytesIterator, VdfConverterConfig $config = null)
     {
         $this->bytesIterator = $bytesIterator;
-        $this->parser = new Parser(new Lexer($this->bytesIterator));
+
+        $config = $config ?: new VdfConverterConfig();
+        $this->parser = new Parser(new Lexer($this->bytesIterator), $config);
     }
 
     /**
-     * @param string $string
+     * @param string                  $string
+     * @param VdfConverterConfig|null $config
      *
      * @return self
      */
-    public static function fromString(string $string): self
+    public static function fromString(string $string, VdfConverterConfig $config = null): self
     {
-        return new static(new StringChunks($string));
+        return new static(new StringChunks($string), $config);
     }
 
     /**
-     * @param string $fileName
+     * @param string                  $fileName
+     * @param VdfConverterConfig|null $config
      *
      * @return self
      */
-    public static function fromFile(string $fileName): self
+    public static function fromFile(string $fileName, VdfConverterConfig $config = null): self
     {
-        return new static(new FileChunks($fileName));
+        return new static(new FileChunks($fileName), $config);
     }
 
     /**
-     * @param resource $stream
+     * @param resource                $stream
+     * @param VdfConverterConfig|null $config
      *
      * @return self
      */
-    public static function fromStream($stream): self
+    public static function fromStream($stream, VdfConverterConfig $config = null): self
     {
-        return new static(new StreamChunks($stream));
+        return new static(new StreamChunks($stream), $config);
     }
 
     /**
-     * @param \Traversable|array $iterable
+     * @param \Traversable|array      $iterable
+     * @param VdfConverterConfig|null $config
      *
      * @return self
      */
-    public static function fromIterable($iterable): self
+    public static function fromIterable($iterable, VdfConverterConfig $config = null): self
     {
-        return new static($iterable);
+        return new static($iterable, $config);
     }
 
     /**

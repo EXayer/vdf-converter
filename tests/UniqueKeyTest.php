@@ -2,7 +2,7 @@
 
 namespace EXayer\VdfConverter\Tests;
 
-use EXayer\VdfConverter\UniqueKey;
+use EXayer\VdfConverter\UniqueKeyHandler;
 use PHPUnit\Framework\TestCase;
 
 class UniqueKeyTest extends TestCase
@@ -15,7 +15,7 @@ class UniqueKeyTest extends TestCase
      */
     public function testStorage(array $initStorage, array $levelsToClear, array $expected)
     {
-        $uniqueKey = new UniqueKey();
+        $uniqueKey = new UniqueKeyHandler();
 
         foreach ($initStorage as $pairs) {
             foreach ($pairs as $level => $key) {
