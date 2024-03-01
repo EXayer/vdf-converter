@@ -1,8 +1,9 @@
 <?php
 
-namespace EXayer\VdfConverter\Tests;
+namespace EXayer\VdfConverter\Tests\UniqueKey;
 
-use EXayer\VdfConverter\UniqueKey;
+use EXayer\VdfConverter\UniqueKey\DefaultFormatter;
+use EXayer\VdfConverter\UniqueKey\UniqueKeyHandler;
 use PHPUnit\Framework\TestCase;
 
 class UniqueKeyTest extends TestCase
@@ -15,7 +16,7 @@ class UniqueKeyTest extends TestCase
      */
     public function testStorage(array $initStorage, array $levelsToClear, array $expected)
     {
-        $uniqueKey = new UniqueKey();
+        $uniqueKey = new UniqueKeyHandler(new DefaultFormatter());
 
         foreach ($initStorage as $pairs) {
             foreach ($pairs as $level => $key) {
@@ -44,7 +45,7 @@ class UniqueKeyTest extends TestCase
             [
                 [[1 => 'key'], [1 => 'key']],
                 [],
-                [1, 'key', 'key__3']
+                [1, 'key', 'key__[3]']
             ],
             [
                 [[1 => 'key'], [1 => 'key'], [2 => 'key'], [3 => 'key']],
@@ -54,7 +55,7 @@ class UniqueKeyTest extends TestCase
             [
                 [[1 => 'key'], [2 => 'key'], [3 => 'key']],
                 [2, 3],
-                [1, 'key', 'key__2']
+                [1, 'key', 'key__[2]']
             ],
         ];
     }
