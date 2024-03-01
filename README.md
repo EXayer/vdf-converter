@@ -140,8 +140,6 @@ interface Formatter
 
 After creating your formatter, you can specify its class name in the `uniqueKeyFormatter` method of the `EXayer\VdfConverter\VdfConverterConfig` object. The config can be passed as second argument to any `from` builder method. Your formatter will then be used by default for all duplicate key handling calls.
 
-You can also specify a signer for a specific webhook call:
-
 ```php
 $config = VdfConverterConfig::create()
     ->uniqueKeyFormatter(YourCustomFormatter::class);
